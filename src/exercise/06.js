@@ -3,27 +3,63 @@
 
 import * as React from 'react'
 
-function UsernameForm({onSubmitUsername}) {
-  // 🐨 add a submit event handler here (`handleSubmit`).
-  // 💰 Make sure to accept the `event` as an argument and call
-  // `event.preventDefault()` to prevent the default behavior of form submit
-  // events (which refreshes the page).
-  // 📜 https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault
-  //
-  // 🐨 get the value from the username input (using whichever method
-  // you prefer from the options mentioned in the instructions)
-  // 💰 For example: event.target.elements[0].value
-  // 🐨 Call `onSubmitUsername` with the value of the input
+// function UsernameForm() {
 
-  // 🐨 add the onSubmit handler to the <form> below
+//   const userNameInput = React.useRef("");
 
-  // 🐨 make sure to associate the label to the input.
-  // to do so, set the value of 'htmlFor' prop of the label to the id of input
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     alert(`You entered: ${userNameInput}`);
+//   }
+
+
+//   return (
+//     <form onSubmit={handleSubmit}>
+//       <div>
+//         <label>Username:</label>
+//         <input type="text" ref={userNameInput}/>
+//       </div>
+//       <button type="submit">Submit</button>
+//     </form>
+//   )
+// }
+
+
+
+function DisplayError({message}) {
   return (
-    <form>
+    <div role="alert" style={{color: 'red'}}>
+      {message}
+  </div>
+  )
+}
+
+function UsernameForm() {
+
+  const [username, setUsername] = React.useState("");
+  const [error, setError] = React.useState(null);
+
+  React.useEffect(() => {
+    const isValid = username.toLowerCase() === username;
+    setError(!isValid ? "Username must be lower case" : null); 
+  }, [username])
+ 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert(`You entered: ${username}`);
+  }
+
+  const handleChange = (e) => {
+    setUsername(e.target.value); 
+  }
+
+
+  return (
+    <form onSubmit={handleSubmit}>
       <div>
         <label>Username:</label>
-        <input type="text" />
+        <input type="text" value={username} onChange={handleChange}/>
+        {error && <DisplayError message={error} />}
       </div>
       <button type="submit">Submit</button>
     </form>
@@ -31,8 +67,7 @@ function UsernameForm({onSubmitUsername}) {
 }
 
 function App() {
-  const onSubmitUsername = username => alert(`You entered: ${username}`)
-  return <UsernameForm onSubmitUsername={onSubmitUsername} />
+  return <UsernameForm />
 }
 
 export default App
